@@ -30,17 +30,8 @@ export class AppService {
   }
 
   createReport(pType: DataType, body: Report) {
-    const { amount, source } = body;
     if (!isDataType(pType)) {
       return { message: '잘못된 타입' };
-    }
-
-    if (typeof source !== 'string') {
-      return { message: 'source : 잘못된 데이터 형식' };
-    }
-
-    if (typeof amount !== 'number') {
-      return { message: 'amount : 잘못된 데이터 형식' };
     }
 
     const newReport: Data['report'][number] = {

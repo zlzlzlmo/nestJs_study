@@ -12,6 +12,7 @@ import {
 import { data, DataType } from './data';
 import { AppService } from './app.service';
 import { Report } from './ts/interface';
+import { CreateReportDto, UpdateReportDto } from './dto/report.dto';
 
 @Controller('report/:type')
 export class AppController {
@@ -27,7 +28,7 @@ export class AppController {
   }
 
   @Post()
-  createReport(@Param('type') pType: DataType, @Body() body: Report) {
+  createReport(@Param('type') pType: DataType, @Body() body: CreateReportDto) {
     return this.appService.createReport(pType, body);
   }
 
@@ -35,8 +36,9 @@ export class AppController {
   updateReport(
     @Param('type') pType: DataType,
     @Param('id') pId: string,
-    @Body() body: Report,
+    @Body() body: UpdateReportDto,
   ) {
+    console.log('body: ', body);
     return this.appService.updateReport(pType, pId, body);
   }
 
