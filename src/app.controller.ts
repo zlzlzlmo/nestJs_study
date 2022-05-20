@@ -51,8 +51,31 @@ export class AppController {
   }
 
   @Put(':id')
-  updateReport() {
-    return 'Updated';
+  updateReport(
+    @Param('type') pType: string,
+    @Param('id') pId: string,
+    @Body() body: { amount: number; source: string },
+  ) {
+    if (!isDataType(pType)) {
+      return { message: '잘못된 타입' };
+    }
+
+    const index = data.report
+      .filter(({ type }) => type === pType)
+      .findIndex(({ id }) => id === pId);
+
+    if (index === -1) {
+      return '존재 하지 않는 데이터';
+    }
+
+    const newReport: Data['report'][number] = {
+      ...data.report[index],
+      ...body,
+    };
+
+    data.report[index] = newReport;
+
+    return data.report[index];
   }
 
   @Delete(':id')
