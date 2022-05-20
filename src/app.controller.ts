@@ -4,82 +4,44 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { Data, data, DataType } from './data';
-import { isDataType } from './util';
-import { v4 as uuid } from 'uuid';
+import { data, DataType } from './data';
+import { AppService } from './app.service';
 
 @Controller('report/:type')
 export class AppController {
+  constructor(private readonly appService: AppService) {}
   @Get()
   getAllReports(@Param('type') pType: DataType) {
-    console.log(pType);
-
-    if (!isDataType(pType)) {
-      return { message: '잘못된 타입' };
-    }
-
-    return data.report.filter(({ type }) => type === pType);
+    return this.appService.getAllReports(pType);
   }
 
   @Get(':id')
-  getReportReportById(@Param('type') pType: string, @Param('id') pId: string) {
-    if (!isDataType(pType)) {
-      return { message: '잘못된 타입' };
-    }
-
-    return data.report
-      .filter(({ type }) => type === pType)
-      .find(({ id }) => id === pId);
+  getReportById(@Param('type') pType: DataType, @Param('id') pId: string) {
+    return this.appService.getReportById(pType, pId);
   }
 
   @Post()
   createReport(@Body() body: { amount: number; source: string }) {
-    const newReport: Data['report'][number] = {
-      id: uuid(),
-      created_at: new Date(),
-      updated_at: new Date(),
-      type: 'income',
-      ...body,
-    };
-
-    data.report.push(newReport);
-    return data;
+    return this.appService.createReport(body);
   }
 
   @Put(':id')
   updateReport(
-    @Param('type') pType: string,
+    @Param('type') pType: DataType,
     @Param('id') pId: string,
     @Body() body: { amount: number; source: string },
   ) {
-    if (!isDataType(pType)) {
-      return { message: '잘못된 타입' };
-    }
-
-    const index = data.report
-      .filter(({ type }) => type === pType)
-      .findIndex(({ id }) => id === pId);
-
-    if (index === -1) {
-      return '존재 하지 않는 데이터';
-    }
-
-    const newReport: Data['report'][number] = {
-      ...data.report[index],
-      ...body,
-    };
-
-    data.report[index] = newReport;
-
-    return data.report[index];
+    return this.appService.updateReport(pType, pId, body);
   }
 
+  @HttpCode(204)
   @Delete(':id')
-  deleteReport() {
-    return 'delete';
+  deleteReport(@Param('id') pId: DataType) {
+    return this.appService.deleteReport(pId);
   }
 }
