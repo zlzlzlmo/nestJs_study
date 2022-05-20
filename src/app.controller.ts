@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { data, DataType } from './data';
 import { AppService } from './app.service';
+import { Report } from './ts/interface';
 
 @Controller('report/:type')
 export class AppController {
@@ -26,15 +27,15 @@ export class AppController {
   }
 
   @Post()
-  createReport(@Body() body: { amount: number; source: string }) {
-    return this.appService.createReport(body);
+  createReport(@Param('type') pType: DataType, @Body() body: Report) {
+    return this.appService.createReport(pType, body);
   }
 
   @Put(':id')
   updateReport(
     @Param('type') pType: DataType,
     @Param('id') pId: string,
-    @Body() body: { amount: number; source: string },
+    @Body() body: Report,
   ) {
     return this.appService.updateReport(pType, pId, body);
   }

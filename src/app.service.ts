@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Data, data, DataType } from './data';
 import { v4 as uuid } from 'uuid';
 import { isDataType } from './util';
+import { Report } from './ts/interface';
 
 @Injectable()
 export class AppService {
@@ -21,12 +22,15 @@ export class AppService {
       .find(({ id }) => id === pId);
   }
 
-  createReport(body: { amount: number; source: string }) {
+  createReport(pType: DataType, body: Report) {
+    if (!isDataType(pType)) {
+      return { message: '잘못된 타입' };
+    }
     const newReport: Data['report'][number] = {
       id: uuid(),
       created_at: new Date(),
       updated_at: new Date(),
-      type: 'income',
+      type: pType,
       ...body,
     };
 
@@ -34,11 +38,7 @@ export class AppService {
     return data;
   }
 
-  updateReport(
-    pType: DataType,
-    pId: string,
-    body: { amount: number; source: string },
-  ) {
+  updateReport(pType: DataType, pId: string, body: Report) {
     if (!isDataType(pType)) {
       return { message: '잘못된 타입' };
     }
