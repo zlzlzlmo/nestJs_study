@@ -1,6 +1,6 @@
 export type DataType = 'income' | 'expense';
 
-interface Data {
+export interface Data {
   report: {
     id: string;
     source: string;
@@ -15,6 +15,14 @@ export const data: Data = {
   report: [
     {
       id: 'uuid',
+      source: 'Salary',
+      amount: 7500,
+      created_at: new Date(),
+      updated_at: new Date(),
+      type: 'income',
+    },
+    {
+      id: 'uuid232',
       source: 'Salary',
       amount: 7500,
       created_at: new Date(),
