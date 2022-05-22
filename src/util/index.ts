@@ -1,5 +1,5 @@
-import { DataType } from 'src/data';
+import { ReportType } from 'src/data';
 
-export function isDataType(value: string): value is DataType {
-  return ['income', 'expense'].includes(value as DataType);
+export function isDataType(value: string): value is ReportType {
+  return ['income', 'expense'].includes(value as ReportType);
 }

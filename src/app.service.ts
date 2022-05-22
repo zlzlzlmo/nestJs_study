@@ -1,40 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { Data, data, DataType } from './data';
+import { Reports, data, ReportType } from './data';
 import { v4 as uuid } from 'uuid';
 import { isDataType } from './util';
 import { Report } from './ts/interface';
+import { ReportResponseDto } from './dto/report.dto';
 
 @Injectable()
 export class AppService {
-  getAllReports(pType: DataType) {
+  getAllReports(pType: ReportType) {
     if (!isDataType(pType)) {
       return { message: '잘못된 타입' };
     }
-    return data.report.filter(({ type }) => type === pType);
+
+    return data.reports.filter(({ type }) => type === pType);
   }
 
-  getReportById(pType: DataType, pId: string) {
-    if (!isDataType(pType)) {
-      return { message: '잘못된 타입' };
-    }
-
-    const result: Report = data.report
+  getReportById(pType: ReportType, pId: string): ReportResponseDto {
+    const result = data.reports
       .filter(({ type }) => type === pType)
       .find(({ id }) => id === pId);
 
-    if (!result) {
-      return { message: '존재하지 않는 데이터' };
-    }
-
-    return result;
+    return new ReportResponseDto(result);
   }
 
-  createReport(pType: DataType, body: Report) {
+  createReport(pType: ReportType, body: Report) {
     if (!isDataType(pType)) {
       return { message: '잘못된 타입' };
     }
 
-    const newReport: Data['report'][number] = {
+    const newReport: Reports['reports'][number] = {
       id: uuid(),
       created_at: new Date(),
       updated_at: new Date(),
@@ -42,16 +36,16 @@ export class AppService {
       ...body,
     };
 
-    data.report.push(newReport);
+    data.reports.push(newReport);
     return data;
   }
 
-  updateReport(pType: DataType, pId: string, body: Report) {
+  updateReport(pType: ReportType, pId: string, body: Report) {
     if (!isDataType(pType)) {
       return { message: '잘못된 타입' };
     }
 
-    const index = data.report
+    const index = data.reports
       .filter(({ type }) => type === pType)
       .findIndex(({ id }) => id === pId);
 
@@ -59,25 +53,25 @@ export class AppService {
       return '존재 하지 않는 데이터';
     }
 
-    const newReport: Data['report'][number] = {
-      ...data.report[index],
+    const newReport: Reports['reports'][number] = {
+      ...data.reports[index],
       ...body,
     };
 
-    data.report[index] = newReport;
+    data.reports[index] = newReport;
 
-    return data.report[index];
+    return data.reports[index];
   }
 
-  deleteReport(pId: DataType) {
-    const index = data.report.findIndex(({ id }) => id === pId);
+  deleteReport(pId: ReportType) {
+    const index = data.reports.findIndex(({ id }) => id === pId);
 
     if (index === -1) {
       return '해당 데이터를 찾을 수 없습니다.';
     }
 
-    data.report.splice(index, 1);
+    data.reports.splice(index, 1);
 
-    return data.report;
+    return data.reports;
   }
 }

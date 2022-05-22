@@ -9,7 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { data, DataType } from './data';
+import { data, ReportType } from './data';
 import { AppService } from './app.service';
 import { Report } from './ts/interface';
 import { CreateReportDto, UpdateReportDto } from './dto/report.dto';
@@ -18,23 +18,26 @@ import { CreateReportDto, UpdateReportDto } from './dto/report.dto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
   @Get()
-  getAllReports(@Param('type') pType: DataType) {
+  getAllReports(@Param('type') pType: ReportType) {
     return this.appService.getAllReports(pType);
   }
 
   @Get(':id')
-  getReportById(@Param('type') pType: DataType, @Param('id') pId: string) {
+  getReportById(@Param('type') pType: ReportType, @Param('id') pId: string) {
     return this.appService.getReportById(pType, pId);
   }
 
   @Post()
-  createReport(@Param('type') pType: DataType, @Body() body: CreateReportDto) {
+  createReport(
+    @Param('type') pType: ReportType,
+    @Body() body: CreateReportDto,
+  ) {
     return this.appService.createReport(pType, body);
   }
 
   @Put(':id')
   updateReport(
-    @Param('type') pType: DataType,
+    @Param('type') pType: ReportType,
     @Param('id') pId: string,
     @Body() body: UpdateReportDto,
   ) {
@@ -44,7 +47,7 @@ export class AppController {
 
   @HttpCode(204)
   @Delete(':id')
-  deleteReport(@Param('id') pId: DataType) {
+  deleteReport(@Param('id') pId: ReportType) {
     return this.appService.deleteReport(pId);
   }
 }

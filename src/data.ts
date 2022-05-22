@@ -1,18 +1,18 @@
-export type DataType = 'income' | 'expense';
+export type ReportType = 'income' | 'expense';
 
-export interface Data {
-  report: {
+export interface Reports {
+  reports: {
     id: string;
     source: string;
     amount: number;
     created_at: Date;
     updated_at: Date;
-    type: DataType;
+    type: ReportType;
   }[];
 }
 
-export const data: Data = {
-  report: [
+export const data: Reports = {
+  reports: [
     {
       id: 'uuid',
       source: 'Salary',
