@@ -8,10 +8,6 @@ import { ReportResponseDto } from 'src/dto/report.dto';
 @Injectable()
 export class ReportService {
   getAllReports(pType: ReportType) {
-    if (!isDataType(pType)) {
-      return { message: '잘못된 타입' };
-    }
-
     return data.reports.filter(({ type }) => type === pType);
   }
 
